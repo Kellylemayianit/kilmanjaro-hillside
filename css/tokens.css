@@ -1,0 +1,20 @@
+/* Design tokens. Light is default; [data-theme=dark] is set by the loader in index.html and js/services/theme.js. */
+@font-face{font-family:Fraunces;src:url(../fonts/fraunces.ttf) format("truetype");font-weight:100 900;font-style:normal;font-display:swap}
+@font-face{font-family:Fraunces;src:url(../fonts/fraunces-italic.ttf) format("truetype");font-weight:100 900;font-style:italic;font-display:swap}
+@font-face{font-family:"Work Sans";src:url(../fonts/worksans.ttf) format("truetype");font-weight:100 900;font-style:normal;font-display:swap}
+:root{
+  color-scheme:light;
+  --bg:#F6EFE3;--dim:#EEE4D2;--ink:#241F1A;--soft:#5A5047;--rule:#DDD0BC;
+  --accent:#8A3A1C;--btn:#9E4423;--btn-hover:#8A3A1C;--btn-ink:#F6EFE3;
+  --wa:#1F6E68;--wa-hover:#154E4A;--wa-ink:#F6EFE3;--mustard:#D98F2B;--amber-ink:#6B4208;
+  --side:#154E4A;--cream:#F6EFE3;--scrim:rgba(36,31,26,.5);
+  --f-display:Fraunces,Georgia,"Noto Serif",serif;--f-body:"Work Sans","Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --wrap:1180px;
+  --sp-1:.5rem;--sp-2:.75rem;--sp-3:1rem;--sp-4:1.5rem;--sp-5:2rem;--sp-6:2.5rem;--sp-7:3rem;--sp-8:4rem;--sp-9:5.5rem;--sp-10:7rem;
+}
+[data-theme=dark]{
+  color-scheme:dark;
+  --bg:#17130F;--dim:#211B16;--ink:#F3EBDD;--soft:#BDB1A2;--rule:#3A3128;
+  --accent:#E59A6E;--btn:#E08A5A;--btn-hover:#EBA079;--btn-ink:#17130F;
+  --wa:#37A59B;--wa-hover:#4DB8AD;--wa-ink:#0E1A19;--amber-ink:#E6B15C;--side:#0F3532;--scrim:rgba(0,0,0,.65);
+}

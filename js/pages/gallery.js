@@ -1,9 +1,8 @@
 import { h } from '../core/dom.js';
-const NUMS = [...Array(20)].map((_, i) => i + 1).filter(n => n !== 17); // 17 = logo
-export function galleryPage() {
-  const big = h('img', { alt: '' });
-  const dlg = h('dialog', { class: 'lb', 'aria-label': 'Photo viewer', onClick: () => dlg.close() }, big);
-  return h('section', {}, h('h1', {}, 'Gallery'),
-    h('div', { class: 'gal' }, NUMS.map(n => h('img', { src: `assets/img/${n}.jpg`, alt: `Resort photo ${n}`, loading: 'lazy',
-      onClick: () => { big.src = `assets/img/${n}.jpg`; dlg.showModal(); } }))), dlg);
-}
+import { GALLERY } from '../data/gallery.js';
+import { PageHead, Photo, Section, img } from '../components/Blocks.js';
+import { modal } from '../components/Modal.js';
+export const galleryPage = () => h('div', { class: 'page' }, PageHead('Gallery', 'Real photography from the resort, alongside a few stock landscapes for context. Stock photos are credited.'),
+  Section('', h('div', { class: 'masonry' }, GALLERY.map(([f, cap, credit]) =>
+    h('button', { class: 'ph-btn', type: 'button', 'aria-label': 'Enlarge: ' + cap, onClick: () => modal(h('figure', { class: 'lightbox' }, h('img', { src: img(f), alt: cap }), h('figcaption', {}, cap + (credit ? ' · ' + credit : ''))), { cls: 'lb', label: cap }) },
+      Photo(f, cap, { cls: 'flow', credit }))))));

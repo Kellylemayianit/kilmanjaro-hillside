@@ -5,9 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Kilimanjaro Hillside Resort · Kimana</title>
 <meta name="description" content="Nyama choma, drinks and rooms at the foot of Kilimanjaro, Kimana, Kajiado County.">
+<meta name="theme-color" content="#F6EFE3">
+<link rel="icon" href="assets/img/logo.png">
+<!-- Theme loader: runs before first paint so there is no light/dark flash. js/services/theme.js owns changes after boot. -->
 <script>try{var t=localStorage.getItem('khr-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.dataset.theme=t}catch(e){}</script>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Inter:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="css/styles.css">
+<link rel="preload" href="fonts/fraunces.ttf" as="font" type="font/ttf" crossorigin>
+<link rel="preload" href="fonts/worksans.ttf" as="font" type="font/ttf" crossorigin>
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/admin.css">
 </head>
 <body>
 <div id="app"></div>

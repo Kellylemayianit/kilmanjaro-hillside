@@ -1,48 +1,54 @@
-import { h } from './core/dom.js';
+import { h, icon } from './core/dom.js';
 import { createStore } from './core/store.js';
 import { startRouter } from './core/router.js';
+import { armReveals } from './core/reveal.js';
 import { SEED } from './data/seed.js';
 import { CONFIG } from './config.js';
+import { initTheme } from './services/theme.js';
 import { waLink } from './services/contact.js';
-import { Sidebar, markActive } from './components/Sidebar.js';
-import { Onboarding } from './components/Onboarding.js';
+import { Header } from './components/Header.js';
+import { Footer } from './components/Footer.js';
+import { openOnboarding, maybeOnboard } from './components/Onboarding.js';
 import { homePage } from './pages/home.js';
+import { storyPage } from './pages/story.js';
 import { catalogPage } from './pages/catalog.js';
 import { roomsPage } from './pages/rooms.js';
 import { galleryPage } from './pages/gallery.js';
 import { contactPage } from './pages/contact.js';
-import { adminPage } from './pages/admin.js';
-import { storyPage } from './pages/story.js';
+import { adminPage } from './pages/admin/index.js';
 
+initTheme();
 const store = createStore('khr-state', SEED);
-const menuBtn = h('button', { type: 'button', 'aria-label': 'Open menu', 'aria-controls': 'side', 'aria-expanded': 'false',
-  onClick: () => setNav(!document.body.classList.contains('nav-open')) }, '☰');
-function setNav(open) {
-  document.body.classList.toggle('nav-open', open);
-  menuBtn.setAttribute('aria-expanded', open);
-}
+
+// Two shells: the public site (header, footer, WhatsApp button) and the admin dashboard (own sidebar layout).
+const header = Header();
 const view = h('main', { id: 'view', tabindex: '-1' });
+const site = h('div', { id: 'site' }, header, view,
+  Footer({ onTour: () => openOnboarding(store) }),
+  h('a', { class: 'whatsapp-float', href: waLink('Hello, I have a question.'), target: '_blank', rel: 'noopener', 'aria-label': 'Chat on WhatsApp' }, icon('whatsapp', 26)));
+const admin = h('div', { id: 'admin-root' });
+document.getElementById('app').append(site, admin);
 
-document.getElementById('app').append(
-  h('header', { class: 'top' }, menuBtn, h('strong', {}, 'Kilimanjaro Hillside')),
-  Sidebar(),
-  h('div', { id: 'scrim', onClick: () => setNav(false) }),
-  view,
-  h('a', { class: 'btn wa fab', href: waLink('Hello, I have a question.'), target: '_blank', rel: 'noopener' }, 'WhatsApp us'),
-  Onboarding());
-addEventListener('keydown', e => e.key === 'Escape' && setNav(false));
-
+const pub = page => ({ shell: 'site', page });
 const routes = {
-  home: homePage,
-  story: storyPage,
-  menu: () => catalogPage(store, 'food', 'Menu', 'Roasted fresh. Tap an item to order on WhatsApp.'),
-  drinks: () => catalogPage(store, 'drink', 'Drinks', 'Spirits, beer and soft drinks. Must be 18+ to order alcohol.'),
-  rooms: () => roomsPage(store),
-  gallery: galleryPage,
-  contact: contactPage,
-  admin: () => adminPage(store),
+  home: pub(homePage),
+  story: pub(storyPage),
+  menu: pub(() => catalogPage(store, 'food', 'Menu', 'Roasted fresh. Tap an item to order on WhatsApp.')),
+  drinks: pub(() => catalogPage(store, 'drink', 'Drinks', 'Spirits, beer and soft drinks. Must be 18+ to order alcohol.')),
+  rooms: pub(() => roomsPage(store)),
+  gallery: pub(galleryPage),
+  contact: pub(() => contactPage(store)),
+  admin: { shell: 'admin', page: sub => adminPage(store, sub) },
 };
-startRouter(routes, view, name => {
-  markActive(name); setNav(false);
-  document.title = (name === 'home' ? '' : name[0].toUpperCase() + name.slice(1) + ' · ') + CONFIG.NAME;
+const TITLES = { home: '', story: 'Our story', menu: 'Menu', drinks: 'Drinks', rooms: 'Rooms', gallery: 'Gallery', contact: 'Contact', admin: 'Admin' };
+
+startRouter(routes, (key, sub, r) => {
+  const isAdmin = r.shell === 'admin';
+  site.hidden = isAdmin; admin.hidden = !isAdmin;
+  const outlet = isAdmin ? admin : view;
+  outlet.replaceChildren(r.page(sub));
+  header.setActive(key);
+  document.title = (TITLES[key] ? TITLES[key] + ' · ' : '') + CONFIG.NAME;
+  scrollTo(0, 0); armReveals(outlet);
 });
+maybeOnboard(store);

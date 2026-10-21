@@ -1,11 +1,9 @@
-// Hash router: #/menu, #/rooms ... Each route is a function returning a DOM node.
-export function startRouter(routes, outlet, onChange) {
+// Hash router: #/menu, #/admin/bookings ... routes[key] = { shell, page(sub) }. onRender decides where it is drawn.
+export function startRouter(routes, onRender) {
   const go = () => {
-    const key = location.hash.replace(/^#\/?/, '') || 'home';
-    const name = routes[key] ? key : 'home';
-    outlet.replaceChildren(routes[name]());
-    onChange?.(name);
-    window.scrollTo(0, 0);
+    const [k = '', sub = ''] = location.hash.replace(/^#\/?/, '').split('/');
+    const key = routes[k] ? k : 'home';
+    onRender(key, sub, routes[key]);
   };
   addEventListener('hashchange', go);
   go();

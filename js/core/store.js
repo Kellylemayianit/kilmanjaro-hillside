@@ -1,4 +1,4 @@
-// Minimal state store persisted to localStorage (per browser).
+// Minimal state store persisted to localStorage (per browser). Swap this file for a real backend later.
 export function createStore(key, initial) {
   let state = structuredClone(initial);
   try { const saved = JSON.parse(localStorage.getItem(key)); if (saved) state = { ...state, ...saved }; } catch {}
