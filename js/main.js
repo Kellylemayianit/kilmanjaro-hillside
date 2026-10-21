@@ -2,6 +2,7 @@ import { h, icon } from './core/dom.js';
 import { createStore } from './core/store.js';
 import { startRouter } from './core/router.js';
 import { armReveals } from './core/reveal.js';
+import { ready } from './core/splash.js';
 import { SEED } from './data/seed.js';
 import { CONFIG } from './config.js';
 import { initTheme } from './services/theme.js';
@@ -49,6 +50,6 @@ startRouter(routes, (key, sub, r) => {
   outlet.replaceChildren(r.page(sub));
   header.setActive(key);
   document.title = (TITLES[key] ? TITLES[key] + ' · ' : '') + CONFIG.NAME;
-  scrollTo(0, 0); armReveals(outlet);
+  scrollTo(0, 0); ready.then(() => armReveals(outlet)); // first load waits for the splash; later routes resolve instantly
 });
-maybeOnboard(store);
+ready.then(() => maybeOnboard(store));

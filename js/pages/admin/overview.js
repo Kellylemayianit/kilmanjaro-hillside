@@ -1,12 +1,14 @@
 import { h, live } from '../../core/dom.js';
+import { countUp } from '../../core/motion.js';
 import { SEED } from '../../data/seed.js';
 import { fmtRange } from '../../services/contact.js';
 import { AHead, statusChip, stockChip, table } from './shared.js';
 const stat = (l, n, hint) => h('div', { class: 'stat' }, h('span', { class: 'label' }, l), h('p', { class: 'n' }, n), h('p', { class: 'soft small' }, hint));
+let counted = false; // count-up plays once per visit, not on every edit
 export const overviewPage = store => live(store, s => {
   const low = s.items.filter(i => i.stock != null && i.stock <= 3);
   const count = st => s.bookings.filter(b => b.status === st).length;
-  return h('div', {}, AHead('Admin · Overview', 'Overview', h('p', { class: 'soft small' }, new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }))),
+  const page = h('div', {}, AHead('Admin · Overview', 'Overview', h('p', { class: 'soft small' }, new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }))),
     h('div', { class: 'stats' }, stat('New requests', count('New'), 'Waiting for a reply'), stat('Confirmed', count('Confirmed'), 'Bookings'),
       stat('Low stock', s.items.filter(i => i.stock > 0 && i.stock <= 3).length, '3 or fewer left'), stat('Sold out', s.items.filter(i => i.stock === 0).length, 'Hidden from ordering')),
     h('div', { class: 'a-grid' },
@@ -19,4 +21,6 @@ export const overviewPage = store => live(store, s => {
           : h('p', { class: 'empty' }, 'Nothing low. Set stock on the Stock tab to track an item.'))),
     h('div', { class: 'danger' }, h('span', { class: 'soft small' }, 'Data is saved in this browser only.'),
       h('button', { class: 'btn sm', type: 'button', onClick: () => confirm('Reset all stock, prices and bookings?') && store.set(structuredClone(SEED)) }, 'Reset demo data')));
+  if (!counted) { counted = true; page.querySelectorAll('.stat .n').forEach(n => countUp(n)); }
+  return page;
 });

@@ -8,7 +8,25 @@
 <meta name="theme-color" content="#F6EFE3">
 <link rel="icon" href="assets/img/logo.png">
 <!-- Theme loader: runs before first paint so there is no light/dark flash. js/services/theme.js owns changes after boot. -->
-<script>try{var t=localStorage.getItem('khr-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.dataset.theme=t}catch(e){}</script>
+<script>try{var t=localStorage.getItem('khr-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add('booting')</script>
+<style>
+/* Splash: inline so it paints before any other CSS/JS arrives (hard start). Removed by js/core/splash.js. */
+#splash{--s-bg:#F6EFE3;--s-ink:#241F1A;--s-soft:#5A5047;--s-acc:#9E4423;--s-rule:#DDD0BC;position:fixed;inset:0;z-index:1000;display:grid;place-items:center;background:var(--s-bg);color:var(--s-ink);transition:transform .85s cubic-bezier(.77,0,.18,1)}
+[data-theme=dark] #splash{--s-bg:#17130F;--s-ink:#F3EBDD;--s-soft:#BDB1A2;--s-acc:#E08A5A;--s-rule:#3A3128}
+#splash.out{transform:translateY(-100%)}
+html.booting,html.booting body{overflow:hidden}
+.sp-in{text-align:center;padding:0 24px;width:min(360px,90vw)}
+.sp-mtn{width:min(240px,64vw);height:auto;display:block;margin:0 auto 28px;overflow:visible}
+.sp-mtn path{fill:none;stroke:var(--s-acc);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.sp-peak{stroke-dasharray:420;stroke-dashoffset:420;animation:sp-draw 1.3s .1s cubic-bezier(.4,0,.2,1) forwards}
+.sp-snow{stroke:var(--s-soft)!important;stroke-dasharray:60;stroke-dashoffset:60;animation:sp-draw .6s .9s ease forwards}
+.sp-ground{stroke:var(--s-rule)!important;stroke-dasharray:240;stroke-dashoffset:240;animation:sp-draw 1s ease forwards}
+.sp-name{font:italic 380 clamp(1.7rem,6vw,2.2rem)/1.1 Fraunces,Georgia,serif;margin:0;opacity:0;transform:translateY(12px);animation:sp-up .8s .55s ease forwards}
+.sp-sub{font:600 .7rem/1.4 "Work Sans",Arial,sans-serif;letter-spacing:.22em;text-transform:uppercase;color:var(--s-soft);margin:12px 0 0;opacity:0;animation:sp-up .8s .8s ease forwards}
+.sp-bar{display:block;height:1px;background:var(--s-rule);margin:32px auto 0;width:140px;overflow:hidden}.sp-bar i{display:block;height:100%;width:100%;background:var(--s-acc);transform:translateX(-100%);animation:sp-fill 1.25s .2s cubic-bezier(.4,0,.2,1) forwards}
+@keyframes sp-draw{to{stroke-dashoffset:0}}@keyframes sp-up{to{opacity:1;transform:none}}@keyframes sp-fill{to{transform:none}}
+@media(prefers-reduced-motion:reduce){#splash,#splash *{animation-duration:.001ms!important;transition-duration:.001ms!important}}
+</style>
 <link rel="preload" href="fonts/fraunces.ttf" as="font" type="font/ttf" crossorigin>
 <link rel="preload" href="fonts/worksans.ttf" as="font" type="font/ttf" crossorigin>
 <link rel="stylesheet" href="css/tokens.css">
@@ -16,10 +34,14 @@
 <link rel="stylesheet" href="css/layout.css">
 <link rel="stylesheet" href="css/components.css">
 <link rel="stylesheet" href="css/admin.css">
+<link rel="stylesheet" href="css/motion.css">
 </head>
 <body>
+<div id="splash" role="status" aria-label="Loading Kilimanjaro Hillside Resort"><div class="sp-in">
+<svg class="sp-mtn" viewBox="0 0 240 90" aria-hidden="true"><path class="sp-ground" d="M4 84H236"/><path class="sp-peak" d="M8 84L54 58l22 8 42-42 18-2 24 8 14 12 58 34"/><path class="sp-snow" d="M104 36l14-10 16 2 12 6"/></svg>
+<p class="sp-name">Kilimanjaro Hillside</p><p class="sp-sub">Kimana · Kajiado County</p><span class="sp-bar"><i></i></span></div></div>
 <div id="app"></div>
-<noscript>Please enable JavaScript to view this site.</noscript>
+<noscript><style>#splash{display:none}html.booting,html.booting body{overflow:auto}</style>Please enable JavaScript to view this site.</noscript>
 <script type="module" src="js/main.js"></script>
 </body>
 </html>
