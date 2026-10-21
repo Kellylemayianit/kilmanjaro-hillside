@@ -1,7 +1,7 @@
 import { h } from '../core/dom.js';
 import { CONFIG } from '../config.js';
 import { ThemeToggle } from './ThemeToggle.js';
-const LINKS = [['home', 'Home'], ['menu', 'Menu'], ['drinks', 'Drinks'], ['rooms', 'Rooms'], ['gallery', 'Gallery'], ['contact', 'Contact'], ['admin', 'Admin']];
+const LINKS = [['home', 'Home'], ['story', 'Our story'], ['menu', 'Menu'], ['drinks', 'Drinks'], ['rooms', 'Rooms'], ['gallery', 'Gallery'], ['contact', 'Contact'], ['admin', 'Admin']];
 export const Sidebar = () =>
   h('aside', { id: 'side', class: 'side' },
     h('div', { class: 'brand' }, h('img', { src: 'assets/img/17.jpg', alt: '' }),

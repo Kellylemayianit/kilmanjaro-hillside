@@ -8,8 +8,8 @@ css/styles.css      tokens, light/dark theme, layout
 js/main.js          boot: store, router, layout
 js/config.js        phone, email, admin PIN, map link  <- edit me
 js/core/            dom.js (h, live), store.js, router.js
-js/components/      Sidebar, ThemeToggle, ItemCard, BookingForm, SendButtons, Onboarding
-js/pages/           home, catalog (menu+drinks), rooms, gallery, contact, admin
+js/components/      Sidebar, ThemeToggle, StoryBlock, ItemCard, BookingForm, SendButtons, Onboarding
+js/pages/           home, story, catalog (menu+drinks), rooms, gallery, contact, admin
 js/services/        theme.js, contact.js (WhatsApp / SMS / email links)
 js/data/seed.js     starting menu, rooms
 ```

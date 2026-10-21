@@ -12,6 +12,7 @@ import { roomsPage } from './pages/rooms.js';
 import { galleryPage } from './pages/gallery.js';
 import { contactPage } from './pages/contact.js';
 import { adminPage } from './pages/admin.js';
+import { storyPage } from './pages/story.js';
 
 const store = createStore('khr-state', SEED);
 const menuBtn = h('button', { type: 'button', 'aria-label': 'Open menu', 'aria-controls': 'side', 'aria-expanded': 'false',
@@ -33,6 +34,7 @@ addEventListener('keydown', e => e.key === 'Escape' && setNav(false));
 
 const routes = {
   home: homePage,
+  story: storyPage,
   menu: () => catalogPage(store, 'food', 'Menu', 'Roasted fresh. Tap an item to order on WhatsApp.'),
   drinks: () => catalogPage(store, 'drink', 'Drinks', 'Spirits, beer and soft drinks. Must be 18+ to order alcohol.'),
   rooms: () => roomsPage(store),
