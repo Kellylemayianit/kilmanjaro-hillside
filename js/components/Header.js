@@ -10,7 +10,7 @@ export function Header() {
     drawer.classList.toggle('open', open); scrim.classList.toggle('open', open);
     document.body.classList.toggle('lock', open); burger.setAttribute('aria-expanded', open);
   };
-  const burger = h('button', { class: 'burger', type: 'button', 'aria-label': 'Open menu', 'aria-controls': 'drawer', 'aria-expanded': 'false', onClick: () => setDrawer(true) }, icon('menu'));
+  const burger = h('button', { class: 'burger', type: 'button', 'aria-label': 'Open menu', 'aria-controls': 'drawer', 'aria-expanded': 'false', onClick: () => setDrawer(true) }, icon('menu'), h('span', {}, 'Menu'));
   const brand = h('a', { class: 'wordmark', href: '#/home', 'aria-label': C.NAME }, h('img', { src: img('logo.png'), alt: '' }));
   const header = h('header', { class: 'site-header' }, h('div', { class: 'wrap nav-inner' }, brand,
     h('nav', { class: 'primary-nav', 'aria-label': 'Main' }, list('')),

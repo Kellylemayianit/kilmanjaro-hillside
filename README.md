@@ -10,13 +10,12 @@ css/
   layout.css            header, drawer, footer, hero, sections, editorial rows, bands
   components.css        cards, theme switch, modal/sheet, handoff, wizard, onboarding
   admin.css             dashboard shell, stats, tables
-  motion.css            splash-to-site handover, word reveals, hero entrance, hover touches
 fonts/                  Fraunces (display) + Work Sans (body), self-hosted
 assets/img/             photos + logo
 js/
   main.js               boot: theme, store, shells (site | admin), router
   config.js             phone, email, admin PIN, map, Facebook   <- edit me
-  core/                 dom.js (h, live, icon, toast), store.js, router.js, reveal.js, splash.js, motion.js
+  core/                 dom.js (h, live, icon, toast), store.js, router.js, reveal.js
   services/             theme.js, contact.js (WhatsApp / SMS / email links + message text)
   data/                 seed.js (menu, rooms, defaults), gallery.js
   components/           Header, Footer, ThemeSwitch, Blocks (design pieces), Modal,
@@ -41,5 +40,7 @@ Or deploy the folder as-is to Cloudflare Pages / Netlify / GitHub Pages.
 Open `#/admin`. Default PIN is in `js/config.js` (change it). Sections: Overview, Bookings (status + reply to guest), Stock, Prices.
 Data is saved in the browser's localStorage, so edits show only on the device used. For edits every visitor sees, a small backend is needed (e.g. Cloudflare D1/KV); `js/core/store.js` is the one place to swap.
 
-## Splash + motion
-`index.html` carries an inline splash (mountain draws itself, name fades up) that paints before anything else on a hard start. `js/core/splash.js` lifts it once fonts and page assets are ready (min 1.2s, max 4s). Headings are split into masked words by `core/motion.js` and slide up when they enter view; the hero, copy blocks and labels follow in sequence (`css/motion.css`). Everything switches off under `prefers-reduced-motion`. To shorten or remove the splash, change the 1200 in `splash.js` or delete the `#splash` block in `index.html`.
+## Look and feel notes
+- **Softness:** three radius tokens in `css/tokens.css` (`--r-sm` 6px, `--r` 10px, `--r-lg` 14px) are applied by the "Soft corners" block at the end of `css/components.css`. Set them all to `0` for the sharper editorial look.
+- **Navigation:** 16px links with a 48px hit area, a tinted pill + underline on the current page, and a labelled "Menu" button below 1020px. The nav styles live at the top of `css/layout.css`.
+- **Animation gotcha:** `css/motion.css` hides some copy until its section gets `.in` (added by `core/reveal.js`). Anything you hide that way must sit inside a `.reveal` element (or be the `.reveal` element, as `.intro-grid.in` does), or it will never appear.

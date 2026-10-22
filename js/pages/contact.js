@@ -16,7 +16,7 @@ export function contactPage(store) {
   side.append(h('h3', {}, 'Send an enquiry'), h('p', {}, 'Tell us your dates and party size. You choose how to send it: WhatsApp, SMS or email.'), form);
   const ext = { target: '_blank', rel: 'noopener' };
   return h('div', { class: 'page' }, PageHead('Plan your stay', 'WhatsApp is the fastest way to reach us. Tap a room or menu item anywhere on the site, or message us directly.'),
-    Section('contact-grid', h('div', {}, Label('Contact & reservations'),
+    Section('contact-grid reveal', h('div', {}, Label('Contact & reservations'),
       h('ul', { class: 'contact-list' },
         h('li', {}, h('span', { class: 'k' }, 'WhatsApp'), h('a', { class: 'v', href: waLink('Hello!'), ...ext }, C.PHONE)),
         h('li', {}, h('span', { class: 'k' }, 'Call'), h('a', { class: 'v', href: `tel:+${C.PHONE_INTL}` }, C.PHONE)),

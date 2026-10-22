@@ -10,6 +10,7 @@
   --side:#154E4A;--cream:#F6EFE3;--scrim:rgba(36,31,26,.5);
   --f-display:Fraunces,Georgia,"Noto Serif",serif;--f-body:"Work Sans","Segoe UI","Helvetica Neue",Arial,sans-serif;
   --wrap:1180px;
+  --r-sm:6px;--r:10px;--r-lg:14px; /* subtle softness: small on chips, medium on buttons/inputs, larger on cards and photos */
   --sp-1:.5rem;--sp-2:.75rem;--sp-3:1rem;--sp-4:1.5rem;--sp-5:2rem;--sp-6:2.5rem;--sp-7:3rem;--sp-8:4rem;--sp-9:5.5rem;--sp-10:7rem;
 }
 [data-theme=dark]{
