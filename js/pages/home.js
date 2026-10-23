@@ -2,7 +2,6 @@ import { h } from '../core/dom.js';
 import { CONFIG as C } from '../config.js';
 import { openQuote } from '../components/QuoteForm.js';
 import { img, Btn, Label, TextLink, Section, Editorial, QuoteBand, SettingBand, Photo } from '../components/Blocks.js';
-import { GALLERY } from '../data/gallery.js';
 const START = [['menu', 'Eat & drink', 'Breakfast, platters, tea and the bar'], ['rooms', 'Stay', 'Simple, colourful rooms'], ['services', 'Safaris, events & catering', 'Tell us what you have in mind']];
 const row = ([k, t, s]) => h('a', { class: 'start-row', href: `#/${k}` }, h('span', {}, h('strong', {}, t), h('small', {}, s)), h('span', { 'aria-hidden': 'true' }, '→'));
 export const homePage = store => h('div', { class: 'page' },
@@ -29,7 +28,7 @@ export const homePage = store => h('div', { class: 'page' },
   SettingBand({ label: 'The setting', title: 'Kimana, Lormeuti', file: 'setting.jpg', credit: 'Stock photo · Pexels, not the resort',
     text: 'Kilimanjaro Hillside Resort sits in Kimana, on the savannah corridor between Amboseli National Park and Mount Kilimanjaro, one of East Africa’s best-known views of the mountain.' }),
   Section('reveal', h('div', { class: 'gallery-head' }, h('h2', { class: 'i' }, 'Gallery'), TextLink('View full gallery →', '#/gallery')),
-    h('div', { class: 'gallery-grid' }, GALLERY.slice(4, 9).map(([f, c], n) => h('div', { class: 'g' + (n + 1) }, Photo(f, c))))),
+    h('div', { class: 'gallery-grid' }, store.get().gallery.slice(0, 5).map((g, n) => h('div', { class: 'g' + (n + 1) }, Photo(g.src, g.cap || 'Photo'))))),
   h('section', { class: 'contact-band reveal' }, h('div', { class: 'wrap contact-grid' },
     h('div', {}, Label('Contact & reservations'), h('h2', { class: 'i' }, 'Plan your stay'),
       h('ul', { class: 'contact-list' }, [['Phone & WhatsApp', C.PHONE_DISPLAY], ['Location', C.LOCATION], ['Hours', C.HOURS]].map(([k, v]) => h('li', {}, h('span', { class: 'k' }, k), h('span', { class: 'v' }, v))))),

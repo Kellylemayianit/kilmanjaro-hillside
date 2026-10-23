@@ -6,6 +6,8 @@ import { ready } from './core/splash.js';
 import { SEED } from './data/seed.js';
 import { CONFIG } from './config.js';
 import { initTheme } from './services/theme.js';
+import { loadCatalog } from './services/catalog.js';
+import { remote } from './services/backend.js';
 import { waLink } from './services/contact.js';
 import { Header } from './components/Header.js';
 import { Footer } from './components/Footer.js';
@@ -20,7 +22,7 @@ import { contactPage } from './pages/contact.js';
 import { adminPage } from './pages/admin/index.js';
 
 initTheme();
-const store = createStore('khr-state-v2', SEED);
+const store = createStore('khr-state-v3', SEED);
 
 // Two shells: the public site (header, footer, WhatsApp button) and the admin dashboard (own sidebar layout).
 const header = Header(store);
@@ -39,19 +41,21 @@ const routes = {
   drinks: pub(() => menuPage(store)), // old link, now part of the Menu
   rooms: pub(() => roomsPage(store)),
   services: pub(() => servicesPage(store)),
-  gallery: pub(galleryPage),
+  gallery: pub(() => galleryPage(store)),
   contact: pub(() => contactPage(store)),
   admin: { shell: 'admin', page: sub => adminPage(store, sub) },
 };
 const TITLES = { home: '', story: 'Our story', menu: 'Menu', drinks: 'Menu', rooms: 'Rooms', services: 'Services', gallery: 'Gallery', contact: 'Contact', admin: 'Admin' };
 
-startRouter(routes, (key, sub, r) => {
+const router = startRouter(routes, (key, sub, r, soft) => {
   const isAdmin = r.shell === 'admin';
   site.hidden = isAdmin; admin.hidden = !isAdmin;
   const outlet = isAdmin ? admin : view;
   outlet.replaceChildren(r.page(sub));
   header.setActive(key);
   document.title = (TITLES[key] ? TITLES[key] + ' · ' : '') + CONFIG.NAME;
-  scrollTo(0, 0); ready.then(() => armReveals(outlet)); // first load waits for the splash; later routes resolve instantly
+  if (!soft) scrollTo(0, 0); ready.then(() => armReveals(outlet)); // first load waits for the splash; later routes resolve instantly
 });
 ready.then(() => maybeOnboard(store));
+// Visitors see cached data instantly; fresh prices/photos from Supabase arrive a moment later and the page redraws in place.
+if (remote) loadCatalog(store).then(r => r.changed && !location.hash.startsWith('#/admin') && !document.querySelector('dialog[open]') && router.refresh());

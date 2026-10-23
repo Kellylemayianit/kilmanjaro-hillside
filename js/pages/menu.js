@@ -7,6 +7,7 @@ import { ItemCard } from '../components/ItemCard.js';
 import { modal } from '../components/Modal.js';
 // One Menu for food, tea & coffee, soft drinks and the bar. Prices come from the store (Admin > Prices).
 const Row = (store, i) => h('li', { class: 'mrow' + (i.desc ? ' has-desc' : '') },
+  i.img && h('img', { class: 'mthumb', src: img(i.img), alt: '', loading: 'lazy' }),
   h('div', { class: 'mname' }, h('span', { class: 'nm' }, i.name), i.desc && h('small', { class: 'soft' }, i.desc),
     i.stock === 0 ? h('span', { class: 'tag amber' }, 'Sold out') : i.stock > 0 && i.stock <= 3 ? h('span', { class: 'tag amber' }, `Only ${i.stock} left`) : null),
   h('span', { class: 'pr' }, money(i.price)), Qty(store, i));
@@ -31,7 +32,7 @@ export function menuPage(store) {
   }
   return h('div', { class: 'page' },
     PageHead('Menu', 'Food, tea and coffee, soft drinks and the bar, all in one place. Add what you need to your order and send it in one message, from a single plate to a big group order.',
-      [Btn('View the printed menu', { onClick: () => modal(h('figure', { class: 'lightbox' }, h('img', { src: img('menu-poster.jpg'), alt: 'The printed Kilimanjaro Hillside menu' })), { cls: 'lb', label: 'Printed menu' }) })]),
+      store.get().poster?.length ? [Btn('View the printed menu', { onClick: () => modal(h('div', { class: 'lightbox poster' }, store.get().poster.map((u, n) => h('img', { src: img(u), alt: `Printed menu, page ${n + 1}` }))), { cls: 'lb', label: 'Printed menu' }) })] : null),
     h('nav', { class: 'menu-nav', 'aria-label': 'Menu sections' }, h('div', { class: 'wrap chips' }, chips)),
     secs,
     Section('fruit reveal', h('span', { class: 'label' }, 'Complimentary'), h('p', {}, 'Every meal is served with a complimentary plate of fresh melon, orange & pineapple.')));

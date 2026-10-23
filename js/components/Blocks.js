@@ -1,9 +1,9 @@
 import { h } from '../core/dom.js';
 // Reusable layout pieces from the design: photo, label, buttons, page head, editorial row, bands.
-const src = f => `assets/img/${f}`;
+const src = f => (/^(https?:|data:|assets\/|\/)/.test(f) ? f : `assets/img/${f}`); // file name in assets/img, or a full URL (Supabase upload)
 export const img = src;
 export const Photo = (file, alt, { cls = '', credit } = {}) =>
-  h('figure', { class: 'ph ' + cls }, h('img', { src: src(file), alt, loading: 'lazy' }), credit && h('figcaption', { class: 'credit' }, credit));
+  h('figure', { class: 'ph ' + cls + (file ? '' : ' ph-empty') }, file ? h('img', { src: src(file), alt, loading: 'lazy' }) : h('span', { class: 'ph-letter', 'aria-hidden': 'true' }, (alt || '?')[0]), credit && h('figcaption', { class: 'credit' }, credit));
 export const Label = (t, dark) => h('span', { class: 'label' + (dark ? ' on-dark' : '') }, t);
 export const Btn = (text, { href, onClick, kind = '', ext } = {}) => href
   ? h('a', { class: 'btn ' + kind, href, ...(ext ? { target: '_blank', rel: 'noopener' } : {}) }, text)

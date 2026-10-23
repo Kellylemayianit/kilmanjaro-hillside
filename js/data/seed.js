@@ -1,3 +1,4 @@
+import { GALLERY } from './gallery.js';
 // Starting data. Prices are from the printed menu; bar prices are not published (price:null = "Ask for price"). stock:null = not tracked.
 const it = (id, sec, cat, name, price, desc, img) => ({ id, sec, cat, name, price, desc, img, stock: null });
 export const SEED = {
@@ -52,9 +53,11 @@ export const SEED = {
     it('x6', 'bar', 'Beer', 'White Cap', null, null, 'real-bar.jpg'),
   ],
   rooms: [
-    { id: 'r1', name: 'Double room', tag: 'Wooden bed, bright walls', img: 'real-room-double.jpg', desc: 'A wooden bed frame in a brightly painted room with a quiet garden setting. Simple and comfortable.' },
-    { id: 'r2', name: 'Comfort double', tag: 'Carved headboard, lace canopy', img: 'real-room-comfort.jpg', desc: 'A roomier double with a carved wooden headboard and a lace canopy overhead. A little more detail for a longer stay.' },
+    { id: 'r1', name: 'Double room', tag: 'Wooden bed, bright walls', img: 'real-room-double.jpg', images: ['real-room-double.jpg'], price: null, desc: 'A wooden bed frame in a brightly painted room with a quiet garden setting. Simple and comfortable.' },
+    { id: 'r2', name: 'Comfort double', tag: 'Carved headboard, lace canopy', img: 'real-room-comfort.jpg', images: ['real-room-comfort.jpg'], price: null, desc: 'A roomier double with a carved wooden headboard and a lace canopy overhead. A little more detail for a longer stay.' },
   ],
+  gallery: GALLERY.map(([src, cap, credit], n) => ({ id: 'g' + n, src, cap, credit })),
+  poster: ['menu-poster.jpg'], // printed menu pages
   requests: [], // quote requests (room, safari, event, catering) and cart orders
   cart: {},     // { itemId: quantity }
   prefs: { contact: 'whatsapp', intent: null },

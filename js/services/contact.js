@@ -15,9 +15,9 @@ export const money = p => (p == null || p === '' ? 'Ask for price' : 'KSh ' + Nu
 export const nights = (a, b) => Math.round((new Date(b) - new Date(a)) / 864e5);
 export const fmtDate = d => new Date(d + 'T12:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
 export const fmtRange = (a, b) => `${fmtDate(a)} – ${fmtDate(b)}`;
-export const KIND = { room: 'Room', safari: 'Safari', event: 'Event hosting', catering: 'Outside catering', order: 'Order' };
+export const KIND = { room: 'Room', safari: 'Safari', event: 'Event hosting', catering: 'Outside catering', order: 'Order', enquiry: 'Enquiry' };
 export const requestText = r =>
-  `Quote request, ${C.NAME}\nService: ${KIND[r.kind]}\n${r.title}\n${r.details.map(([k, v]) => `${k}: ${v}`).join('\n')}\nName: ${r.name}\nPhone: ${r.phone}${r.email ? `\nEmail: ${r.email}` : ''}${r.message ? `\nMessage: ${r.message}` : ''}`;
+  `Quote request, ${C.NAME}\nService: ${KIND[r.kind]}${r.details.some(d => d[1] === r.title) ? '' : `\n${r.title}`}\n${r.details.map(([k, v]) => `${k}: ${v}`).join('\n')}\nName: ${r.name}\nPhone: ${r.phone}${r.email ? `\nEmail: ${r.email}` : ''}${r.message ? `\nMessage: ${r.message}` : ''}`;
 export const enquiryText = f => `Enquiry, ${C.NAME}\nName: ${f.name}\nPhone: ${f.phone}\n${f.checkIn ? `Dates: ${f.checkIn} to ${f.checkOut}\n` : ''}${f.message || ''}`.trim();
 // Admin -> guest replies
 export const replyText = r => {
@@ -29,3 +29,15 @@ export const replyText = r => {
   }[r.status] || `Hello ${r.name}, thank you for your ${what}. We will send you a quote shortly.`);
 };
 export const guestDest = r => ({ whatsapp: intl(r.phone), sms: intl(r.phone), email: r.email || '' });
+
+// Quick replies for the admin inbox. `key` decides the status change when sent (quote -> Quoted, confirm -> Confirmed, decline -> Cancelled).
+export const replyTemplates = r => {
+  const what = `${KIND[r.kind].toLowerCase()} (${r.title})`;
+  return [
+    ['ack', 'Got it', `Hello ${r.name}, thank you for your ${what}. We have received it and will get back to you shortly.`],
+    ['quote', 'Send quote', `Hello ${r.name}, here is your quote for the ${what}: ${r.quote ? money(r.quote) : 'KSh ____'}. Reply here if you would like to go ahead.`],
+    ['confirm', 'Confirm', `Hello ${r.name}, your ${what} is confirmed. We look forward to hosting you at ${C.NAME}.`],
+    ['details', 'Ask for details', `Hello ${r.name}, to prepare your quote for the ${what}, could you tell us: ____ ?`],
+    ['decline', 'Decline', `Hello ${r.name}, we are sorry, we are unable to help with your ${what}. Please message us to talk through other options.`],
+  ];
+};

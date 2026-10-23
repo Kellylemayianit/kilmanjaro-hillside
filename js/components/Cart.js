@@ -1,6 +1,7 @@
 import { h, live, icon, toast } from '../core/dom.js';
 import { money } from '../services/contact.js';
 import { lines, count, totalText, linesText, orderText, clearCart } from '../services/cart.js';
+import { newRequest, submitRequest } from '../services/requests.js';
 import { modal } from './Modal.js';
 import { Handoff } from './Handoff.js';
 import { Qty } from './Qty.js';
@@ -35,15 +36,13 @@ export function openCart(store) {
       field('Notes', 'notes', { area: true, full: true, ph: 'Bulk or event order? Tell us the date, place and numbers.' }),
       h('div', { class: 'full row-actions' }, h('button', { class: 'btn solid', type: 'submit' }, 'Send order'),
         h('button', { class: 'btn quiet', type: 'button', onClick: () => { clearCart(store); toast('Order cleared'); } }, 'Clear order'))));
-  const sendView = () => {
-    const s = store.get(), text = orderText(s, cust), items = linesText(s), tot = totalText(s), n = count(s);
-    body.replaceChildren(h('span', { class: 'label' }, 'Almost there'), h('h2', {}, 'Send your order'),
-      Handoff(store, { text, subject: 'Order', extra: h('button', { class: 'link', type: 'button', onClick: cartView }, 'Back to my order'),
-        onSent: c => {
-          const r = { id: 'r' + Date.now(), kind: 'order', status: 'New', created: new Date().toISOString(), name: cust.name, phone: cust.phone, email: '', sentVia: c,
-            title: `${n} item${n > 1 ? 's' : ''}`, details: [['Items', items], ['Total', tot], cust.needed && ['Needed on', cust.needed]].filter(Boolean), message: cust.notes };
-          store.set(x => ({ requests: [r, ...x.requests] })); clearCart(store);
-        } }));
+  const sendView = async () => {
+    const s = store.get(), text = orderText(s, cust), n = count(s);
+    const r = newRequest('order', { name: cust.name, phone: cust.phone, title: `${n} item${n > 1 ? 's' : ''}`, message: cust.notes,
+      details: [['Items', linesText(s)], ['Total', totalText(s)], cust.needed && ['Needed on', cust.needed]].filter(Boolean) });
+    await submitRequest(store, r); clearCart(store);
+    body.replaceChildren(h('span', { class: 'label' }, 'Order saved'), h('h2', {}, 'Send your order'),
+      Handoff(store, { text, subject: 'Order', next: ['The resort receives your order', 'We confirm the items, total and pickup or delivery time', 'Keep your phone nearby'] }));
   };
   cartView();
   return m;

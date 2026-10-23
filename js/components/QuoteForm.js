@@ -1,5 +1,6 @@
 import { h, toast } from '../core/dom.js';
 import { requestText } from '../services/contact.js';
+import { newRequest, submitRequest } from '../services/requests.js';
 import { modal } from './Modal.js';
 import { Handoff } from './Handoff.js';
 const OCC = ['Birthday', 'Wedding', 'Family gathering', 'Corporate event', 'Other'];
@@ -24,15 +25,14 @@ export function openQuote(store, kind = 'room', preset = {}) {
       : h('input', { id, type: t, value: val, min: t === 'number' ? 1 : t === 'date' ? today : null, required: o.req, autocomplete: o.ac, onInput: e => (st.v[n] = e.target.value) });
     return h('div', { class: 'field' + (o.full ? ' full' : '') }, h('label', { for: id }, l), el);
   };
-  const submit = () => {
+  const submit = async () => {
     const K = QUOTE_KINDS[st.kind], v = st.v, s = store.get();
     if (st.kind === 'room' && v.checkIn && v.checkOut && v.checkOut <= v.checkIn) return toast('Check-out must be after check-in');
-    const r = { id: 'r' + Date.now(), kind: st.kind, status: 'New', created: new Date().toISOString(), name: v.name, phone: v.phone, email: v.email || '',
-      title: K.title(v) || K.label, details: K.fields(s).map(([n, l]) => [l, v[n]]).filter(d => d[1]), message: v.message || '' };
-    store.set(x => ({ requests: [r, ...x.requests] }));
-    body.replaceChildren(h('span', { class: 'label' }, 'Step 2 of 2'), h('h2', {}, 'Send your request'),
-      Handoff(store, { text: requestText(r), subject: 'Quote request: ' + r.title,
-        onSent: c => store.set(x => ({ requests: x.requests.map(y => (y.id === r.id ? { ...y, sentVia: c } : y)) })) }));
+    const r = newRequest(st.kind, { name: v.name, phone: v.phone, email: v.email, title: K.title(v) || K.label, message: v.message,
+      details: K.fields(s).map(([n, l]) => [l, v[n]]).filter(d => d[1]) });
+    await submitRequest(store, r);
+    body.replaceChildren(h('span', { class: 'label' }, 'Request saved'), h('h2', {}, 'Send your request'),
+      Handoff(store, { text: requestText(r), subject: 'Quote request: ' + r.title, next: ['The resort receives your request', 'We send you a quote on the same app', 'Reply to go ahead and we confirm your booking'] }));
   };
   const draw = () => {
     const K = QUOTE_KINDS[st.kind];
