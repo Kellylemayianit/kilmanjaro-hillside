@@ -15,13 +15,17 @@ export const money = p => (p == null || p === '' ? 'Ask for price' : 'KSh ' + Nu
 export const nights = (a, b) => Math.round((new Date(b) - new Date(a)) / 864e5);
 export const fmtDate = d => new Date(d + 'T12:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
 export const fmtRange = (a, b) => `${fmtDate(a)} – ${fmtDate(b)}`;
-export const orderText = i => `Hello, I would like to order: ${i.name}`;
-export const bookingText = b =>
-  `Booking request, ${C.NAME}\nRoom: ${b.room}\nName: ${b.name}\nPhone: ${b.phone}\nCheck-in: ${b.checkIn}\nCheck-out: ${b.checkOut}\nGuests: ${b.guests}`;
+export const KIND = { room: 'Room', safari: 'Safari', event: 'Event hosting', catering: 'Outside catering', order: 'Order' };
+export const requestText = r =>
+  `Quote request, ${C.NAME}\nService: ${KIND[r.kind]}\n${r.title}\n${r.details.map(([k, v]) => `${k}: ${v}`).join('\n')}\nName: ${r.name}\nPhone: ${r.phone}${r.email ? `\nEmail: ${r.email}` : ''}${r.message ? `\nMessage: ${r.message}` : ''}`;
 export const enquiryText = f => `Enquiry, ${C.NAME}\nName: ${f.name}\nPhone: ${f.phone}\n${f.checkIn ? `Dates: ${f.checkIn} to ${f.checkOut}\n` : ''}${f.message || ''}`.trim();
 // Admin -> guest replies
-export const replyText = b => ({
-  Confirmed: `Hello ${b.name}, your ${b.room} is confirmed for ${fmtRange(b.checkIn, b.checkOut)}. We look forward to hosting you at ${C.NAME}.`,
-  Cancelled: `Hello ${b.name}, we are sorry, we are unable to host your ${b.room} request for ${fmtRange(b.checkIn, b.checkOut)}. Please message us for other dates.`,
-}[b.status] || `Hello ${b.name}, thank you for your request for the ${b.room} (${fmtRange(b.checkIn, b.checkOut)}). We will confirm availability shortly.`);
-export const guestDest = b => ({ whatsapp: intl(b.phone), sms: intl(b.phone), email: b.email || '' });
+export const replyText = r => {
+  const what = `${KIND[r.kind].toLowerCase()} request (${r.title})`;
+  return ({
+    Quoted: `Hello ${r.name}, here is your quote for the ${what}: ${r.quote ? money(r.quote) : 'we will confirm the price shortly'}. Reply here if you would like to go ahead.`,
+    Confirmed: `Hello ${r.name}, your ${what} is confirmed. We look forward to hosting you at ${C.NAME}.`,
+    Cancelled: `Hello ${r.name}, we are sorry, we are unable to help with your ${what}. Please message us to talk through other options.`,
+  }[r.status] || `Hello ${r.name}, thank you for your ${what}. We will send you a quote shortly.`);
+};
+export const guestDest = r => ({ whatsapp: intl(r.phone), sms: intl(r.phone), email: r.email || '' });

@@ -47,3 +47,15 @@ dialog.modal{border-radius:var(--r-lg)}dialog.modal.full{border-radius:18px}dial
 .stat:first-child{border-radius:0}
 .choice.on{border-radius:var(--r-lg)}.editorial-copy .note{border-radius:0}
 @media(max-width:640px){dialog.modal.sheet{border-radius:var(--r-lg) var(--r-lg) 0 0}dialog.modal.full{border-radius:0}}
+
+/* ===== Quantity stepper, cart panel, quote sheet ===== */
+.qty{display:inline-flex;align-items:center;gap:var(--sp-1);flex:none}.card-b .qty{margin-top:auto;align-self:flex-start}
+.qb{width:44px;height:44px;border:1px solid var(--accent);border-radius:var(--r);background:none;color:var(--accent);font:600 1.2rem var(--f-body);cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+.qb:hover{background:var(--btn);border-color:var(--btn);color:var(--btn-ink)}.qty .n{min-width:1.6rem;text-align:center;font-weight:600;font-variant-numeric:tabular-nums}
+dialog.modal.panel-right{margin:0 0 0 auto;width:min(460px,100vw);height:100dvh;max-height:100dvh;border-radius:0;border-width:0 0 0 1px;animation:slide-in .35s cubic-bezier(.2,.7,.2,1)}
+@keyframes slide-in{from{transform:translateX(40px);opacity:0}}
+.cart h2{margin:var(--sp-1) 0 var(--sp-4)}.cart-lines{border-top:1px solid var(--rule)}.cl{display:flex;align-items:center;gap:var(--sp-2);padding:.8rem 0;border-bottom:1px solid var(--rule)}
+.cl-name{flex:1;display:flex;flex-direction:column}.cl .pr{min-width:5.5rem;text-align:right}
+.cl-total{display:flex;justify-content:space-between;align-items:baseline;padding:var(--sp-3) 0;margin-bottom:var(--sp-4)}.cl-total strong{font:380 1.5rem var(--f-display)}
+dialog.modal.sheet.wide{width:min(580px,94vw)}.dl-row dd{white-space:pre-line}
+@media(max-width:640px){dialog.modal.panel-right{width:100vw}}

@@ -12,7 +12,11 @@ export const h = (tag, props = {}, ...kids) => {
 // A container that re-renders whenever the store changes. box.redraw() re-renders on demand (local UI state).
 export const live = (store, render) => {
   const box = h('div');
-  const draw = () => box.replaceChildren(render(store.get()));
+  const draw = () => {
+    const k = box.contains(document.activeElement) ? document.activeElement.dataset?.fk : null;
+    box.replaceChildren(render(store.get()));
+    if (k) box.querySelector(`[data-fk="${k}"]`)?.focus();
+  };
   box.redraw = draw; draw();
   const off = store.subscribe(() => (box.isConnected ? draw() : off()));
   return box;
@@ -28,6 +32,7 @@ const IC = {
   close: '<path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.6" fill="none"/>',
   arrow: '<path d="M4 12h16M14 6l6 6-6 6" stroke="currentColor" stroke-width="1.6" fill="none"/>',
   check: '<path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="1.6" fill="none"/>',
+  bag: '<path d="M5 8h14l-1 12H6L5 8zM9 8a3 3 0 0 1 6 0" stroke="currentColor" stroke-width="1.6" fill="none"/>',
   sun: '<circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19" stroke="currentColor" stroke-width="1.6"/>',
   moon: '<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" fill="none" stroke="currentColor" stroke-width="1.6"/>',
 };

@@ -4,7 +4,7 @@ import { img } from './Blocks.js';
 import { modal } from './Modal.js';
 const seen = () => { try { return !!localStorage.getItem('khr-seen'); } catch { return true; } };
 const mark = () => { try { localStorage.setItem('khr-seen', '1'); } catch {} };
-const INTENT = [['menu', 'Eat', 'Nyama choma and Kenyan plates'], ['rooms', 'Stay', 'Book a room'], ['drinks', 'Drinks & events', 'Bar, lounge and garden']];
+const INTENT = [['menu', 'Eat & drink', 'Menu, orders and the bar'], ['rooms', 'Stay', 'Get a room quote'], ['services', 'Safaris & events', 'Safaris, events, outside catering']];
 const REACH = [['whatsapp', 'WhatsApp', 'Fastest way to confirm a room or order', 'Recommended'], ['sms', 'SMS', 'Works without data'], ['email', 'Email', 'Best for longer enquiries']];
 // 3 steps: welcome -> what brings you -> how should we reach you. Saves prefs.contact, which Handoff uses as the first choice.
 export function openOnboarding(store) {

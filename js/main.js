@@ -12,17 +12,18 @@ import { Footer } from './components/Footer.js';
 import { openOnboarding, maybeOnboard } from './components/Onboarding.js';
 import { homePage } from './pages/home.js';
 import { storyPage } from './pages/story.js';
-import { catalogPage } from './pages/catalog.js';
+import { menuPage } from './pages/menu.js';
+import { servicesPage } from './pages/services.js';
 import { roomsPage } from './pages/rooms.js';
 import { galleryPage } from './pages/gallery.js';
 import { contactPage } from './pages/contact.js';
 import { adminPage } from './pages/admin/index.js';
 
 initTheme();
-const store = createStore('khr-state', SEED);
+const store = createStore('khr-state-v2', SEED);
 
 // Two shells: the public site (header, footer, WhatsApp button) and the admin dashboard (own sidebar layout).
-const header = Header();
+const header = Header(store);
 const view = h('main', { id: 'view', tabindex: '-1' });
 const site = h('div', { id: 'site' }, header, view,
   Footer({ onTour: () => openOnboarding(store) }),
@@ -32,16 +33,17 @@ document.getElementById('app').append(site, admin);
 
 const pub = page => ({ shell: 'site', page });
 const routes = {
-  home: pub(homePage),
-  story: pub(storyPage),
-  menu: pub(() => catalogPage(store, 'food', 'Menu', 'Roasted fresh. Tap an item to order on WhatsApp.')),
-  drinks: pub(() => catalogPage(store, 'drink', 'Drinks', 'Spirits, beer and soft drinks. Must be 18+ to order alcohol.')),
+  home: pub(() => homePage(store)),
+  story: pub(() => storyPage(store)),
+  menu: pub(() => menuPage(store)),
+  drinks: pub(() => menuPage(store)), // old link, now part of the Menu
   rooms: pub(() => roomsPage(store)),
+  services: pub(() => servicesPage(store)),
   gallery: pub(galleryPage),
   contact: pub(() => contactPage(store)),
   admin: { shell: 'admin', page: sub => adminPage(store, sub) },
 };
-const TITLES = { home: '', story: 'Our story', menu: 'Menu', drinks: 'Drinks', rooms: 'Rooms', gallery: 'Gallery', contact: 'Contact', admin: 'Admin' };
+const TITLES = { home: '', story: 'Our story', menu: 'Menu', drinks: 'Menu', rooms: 'Rooms', services: 'Services', gallery: 'Gallery', contact: 'Contact', admin: 'Admin' };
 
 startRouter(routes, (key, sub, r) => {
   const isAdmin = r.shell === 'admin';
